@@ -41,7 +41,9 @@ const usePlayer = (myId, roomId, peer) => {
     setPlayers((prev) => {
       const copy = cloneDeep(prev);
       if (copy[myId]) {
-        copy[myId].playing = !copy[myId].playing;
+        // Safeguard against undefined player
+        const player = copy[myId];
+        player.playing = !player.playing;
       } else {
         console.error(`Player with ID ${myId} does not exist.`);
       }

@@ -26,11 +26,15 @@ const usePlayer = (myId, roomId, peer) => {
     console.log("I toggled my audio");
     setPlayers((prev) => {
       const copy = cloneDeep(prev);
-      if (copy[myId]) {
-        copy[myId].muted = !copy[myId].muted;
-      } else {
-        console.error(`Player with ID ${myId} does not exist.`);
+
+      // Ensure the player object exists
+      if (!copy[myId]) {
+        copy[myId] = { muted: false }; // Initialize with default value if player does not exist
       }
+
+      // Toggle the audio property
+      copy[myId].muted = !copy[myId].muted;
+
       return { ...copy };
     });
     socket.emit("user-toggle-audio", myId, roomId);
@@ -40,13 +44,15 @@ const usePlayer = (myId, roomId, peer) => {
     console.log("I toggled my video");
     setPlayers((prev) => {
       const copy = cloneDeep(prev);
-      if (copy[myId]) {
-        // Safeguard against undefined player
-        const player = copy[myId];
-        player.playing = !player.playing;
-      } else {
-        console.error(`Player with ID ${myId} does not exist.`);
+
+      // Ensure the player object exists
+      if (!copy[myId]) {
+        copy[myId] = { playing: false }; // Initialize with default value if player does not exist
       }
+
+      // Toggle the video property
+      copy[myId].playing = !copy[myId].playing;
+
       return { ...copy };
     });
     socket.emit("user-toggle-video", myId, roomId);
